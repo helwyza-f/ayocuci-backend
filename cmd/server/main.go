@@ -3,9 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-
 	"github.com/helwyza-f/ayocuci-backend/internal/config"
 	"github.com/helwyza-f/ayocuci-backend/internal/database"
 	"github.com/helwyza-f/ayocuci-backend/internal/module/audit_log"
@@ -18,6 +17,7 @@ import (
 	"github.com/helwyza-f/ayocuci-backend/internal/module/order"
 	"github.com/helwyza-f/ayocuci-backend/internal/module/outlet"
 	"github.com/helwyza-f/ayocuci-backend/internal/routes"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -32,6 +32,13 @@ func main() {
 	&order.OrderItem{}, &expense.Expense{}, &audit_log.AuditLog{})
 
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"*"}, // Izinkan semua (buat dev/test oke banget)
+        AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+        ExposeHeaders:    []string{"Content-Length"},
+        AllowCredentials: true,
+    }))
 	routes.Register(r, database.DB)
 
 	port := config.GetEnv("APP_PORT", "8080")
