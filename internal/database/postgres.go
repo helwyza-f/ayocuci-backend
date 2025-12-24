@@ -19,7 +19,7 @@ func Connect(dbPath string) {
 	var dialector gorm.Dialector
 
 	// 1. Cek apakah path mengandung format postgres
-	if strings.Contains(dbPath, "postgres://") {
+	if strings.Contains(dbPath, "postgres") {
 		log.Println("Connecting to PostgreSQL...")
 		dialector = postgres.Open(dbPath)
 	} else {
